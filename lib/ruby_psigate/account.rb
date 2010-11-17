@@ -10,5 +10,9 @@ module RubyPsigate
     alias_method :zipcode, :postal_code
     alias_method :zipcode=, :postal_code=
     
+    def credit_card=(cc_object)
+      raise ArgumentError unless cc_object.is_a?(PgCreditcard)
+    end
+    
   end
 end

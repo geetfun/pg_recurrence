@@ -157,6 +157,20 @@ module RubyPsigate
       assert @account.respond_to?(:comments), "Account instance does not have comments getter"
     end
     
+    # Holder for credit card object
+    
+    def test_credit_card_object_holder
+      @account = Account.new
+      assert @account.respond_to?(:credit_card=), "Account instance does not have credit card object setter"
+    end
+    
+    def test_raises_error_if_credit_card_is_not_instance_of_pg_creditcard
+      @account = Account.new
+      assert_raise(ArgumentError) do
+        @account.credit_card = "hello world"
+      end
+    end
+    
     # cardholder, number, expiry month, expiry year
     
     # Add new account
