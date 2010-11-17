@@ -171,12 +171,68 @@ module RubyPsigate
       end
     end
     
+    def test_raises_no_error_if_credit_card_is_instance_of_pg_creditcard
+      creditcard = PgCreditcard.new(
+        :name => "Homer Simpsons",
+        :number => "4111111111111111",
+        :month  => "03",
+        :year   => "20",
+        :cvv    => "123"
+      )
+      
+      @account = Account.new
+      assert_nothing_raised do
+        @account.credit_card = creditcard
+      end
+    end
+    
+    def test_new_account_instance_accepts_hash_of_values
+      @account = Account.new(
+        :account_id => "account_id_123",
+        :name => "Homer Simpson"
+      )
+      
+      assert @account, "Account instance not initialized from hash of attributes"
+    end
+    
+    def test_new_account_instance_with_hash_will_assign_instance_variables
+      attributes = {
+        :account_id => "account_id_123",
+        :name => "Homer Simpson",
+        :company => "Fox Broadcast Corporation",
+        :email => "homer@simpsons.com",
+        :comments => "Secret",
+        :address1 => "52 Evergreen Lane",
+        :address2 => "Second House",
+        :city => "Springfield",
+        :state => "Somewhere",
+        :postal_code => "N1N N1N",
+        :country => "USA",
+        :phone => "222-222-2222",
+        :fax => "333-333-3333"
+      }
+      
+      @account = Account.new(attributes)
+      
+      
+    end
+    
     # cardholder, number, expiry month, expiry year
     
     # Add new account
     
     def test_successfully_in_adding_account
-      
+      # @creditcard = PgCreditcard.new(
+      #   :name => "Homer Simpsons",
+      #   :number => "4111111111111111",
+      #   :month  => "03",
+      #   :year   => "20",
+      #   :cvv    => "123"
+      # )
+      # 
+      # @account = Account.new(
+      #   
+      # )
     end
     
     def test_failure_in_adding_account

@@ -12,6 +12,7 @@ module RubyPsigate
     
     def credit_card=(cc_object)
       raise ArgumentError unless cc_object.is_a?(PgCreditcard)
+      @credit_card = cc_object
     end
     
   end
