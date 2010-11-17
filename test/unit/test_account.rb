@@ -92,7 +92,7 @@ module RubyPsigate
 
     def test_postal_code_getter
       @account = Account.new
-      assert @account.respond_to?(:postal_code), "Account instance does not have province getter"
+      assert @account.respond_to?(:postal_code), "Account instance does not have postal code getter"
     end
 
     def test_zipcode_setter_is_same_as_postal_code_setter
@@ -106,8 +106,58 @@ module RubyPsigate
       @account.postal_code = "Something"
       assert_equal @account.zipcode, @account.postal_code
     end
+
+    def test_country_setter
+      @account = Account.new
+      assert @account.respond_to?(:country=), "Account instance does not have country setter"
+    end
+
+    def test_country_getter
+      @account = Account.new
+      assert @account.respond_to?(:country), "Account instance does not have country getter"
+    end
+
+    def test_phone_setter
+      @account = Account.new
+      assert @account.respond_to?(:phone=), "Account instance does not have phone setter"
+    end
+
+    def test_phone_getter
+      @account = Account.new
+      assert @account.respond_to?(:phone), "Account instance does not have phone getter"
+    end
     
-    # country, phone, fax, email, comments, cardholder, number, expiry month, expiry year
+    def test_fax_setter
+      @account = Account.new
+      assert @account.respond_to?(:fax=), "Account instance does not have fax setter"
+    end
+
+    def test_fax_getter
+      @account = Account.new
+      assert @account.respond_to?(:fax), "Account instance does not have fax getter"
+    end
+
+    def test_email_setter
+      @account = Account.new
+      assert @account.respond_to?(:email=), "Account instance does not have email setter"
+    end
+
+    def test_email_getter
+      @account = Account.new
+      assert @account.respond_to?(:email), "Account instance does not have email getter"
+    end
+
+    def test_comments_setter
+      @account = Account.new
+      assert @account.respond_to?(:comments=), "Account instance does not have comments setter"
+    end
+
+    def test_comments_getter
+      @account = Account.new
+      assert @account.respond_to?(:comments), "Account instance does not have comments getter"
+    end
+    
+    # cardholder, number, expiry month, expiry year
     
     # Add new account
     
