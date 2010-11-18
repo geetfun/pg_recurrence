@@ -199,22 +199,18 @@ module RubyPsigate
       attributes = {
         :account_id => "account_id_123",
         :name => "Homer Simpson",
-        :company => "Fox Broadcast Corporation",
-        :email => "homer@simpsons.com",
-        :comments => "Secret",
-        :address1 => "52 Evergreen Lane",
-        :address2 => "Second House",
-        :city => "Springfield",
-        :state => "Somewhere",
-        :postal_code => "N1N N1N",
         :country => "USA",
-        :phone => "222-222-2222",
-        :fax => "333-333-3333"
+        :zipcode => "12345",
+        :province => "Ontario"
       }
       
       @account = Account.new(attributes)
       
-      
+      assert_equal @account.account_id, "account_id_123"
+      assert_equal @account.name, "Homer Simpson"
+      assert_equal @account.country, "USA"
+      assert_equal @account.zipcode, "12345"
+      assert_equal @account.province, "Ontario"
     end
     
     # cardholder, number, expiry month, expiry year
