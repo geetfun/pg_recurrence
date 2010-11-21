@@ -15,7 +15,16 @@ module RubyPsigate
       )
 
       @account = Account.new(
-        # Put in info here
+        :name => "Home Simpson",
+        :email => "homer@simpsons.com",
+        :address1 => "1234 Evergrove Drive",
+        :address2 => nil,
+        :city => "Toronto",
+        :province => "ON",
+        :postal_code => "M2N3A3",
+        :country => "CA",
+        :phone => "416-111-1111",
+        :creditcard => @creditcard
       )
 
       result = @account.register
