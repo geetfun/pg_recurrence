@@ -4,6 +4,7 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem "crack"
+gem "pg_serializer"
 gem "pg_creditcard"
 
 # Add dependencies to develop your gem here.
