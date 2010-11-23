@@ -6,7 +6,11 @@ module RubyPsigate
     # Add new account
 
     def test_successfully_in_adding_account
-      @creditcard = PgCreditcard.new(
+      @credential = Credential.new(
+        :CID => "1000001", :UserID => "teststore", :password => "testpass"
+      )
+      
+      @credit_card = PgCreditcard.new(
         :name => "Homer Simpsons",
         :number => "4111111111111111",
         :month  => "03",
@@ -24,7 +28,8 @@ module RubyPsigate
         :postal_code => "M2N3A3",
         :country => "CA",
         :phone => "416-111-1111",
-        :creditcard => @creditcard
+        :credit_card => @credit_card,
+        :credential => @credential
       )
 
       result = @account.register

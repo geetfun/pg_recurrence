@@ -213,6 +213,8 @@ module RubyPsigate
       end
     end
     
+    # Creating instances from hash
+    
     def test_new_account_instance_accepts_hash_of_values
       @account = Account.new(
         :account_id => "account_id_123",

@@ -1,5 +1,7 @@
 module RubyPsigate
   class Credential
+    
+    attr_reader :cid, :userid, :password, :mode, :endpoint
   
     def initialize(options)
       @cid      = options[:CID]
