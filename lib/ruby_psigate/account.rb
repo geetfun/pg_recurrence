@@ -33,39 +33,65 @@ module RubyPsigate
       @credit_card = cc_object
     end
     
+    def self.find(remote_account_id)
+      # Finds an existing account by account_id
+    end
+    
+    def delete
+      # Deletes account
+      
+      remote_account_id = account_id
+    end
+    
     def register
-      # Creates placeholder hash
-      @request = {}
-      @request[:Request] = {}
-      
-      # Add credentials
-      %w( CID UserID Password ).each do |c|
-        @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
+      begin
+        # Creates placeholder hash
+        @request = {}
+        @request[:Request] = {}
+
+        # Add credentials
+        %w( CID UserID Password ).each do |c|
+          @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
+        end
+
+        # Action
+        @request[:Request][:Action] = "AMA01"
+
+        # Account Details
+        @request[:Request][:Account] = {}
+        %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
+          value = self.send((a.downcase).to_sym)
+          @request[:Request][:Account][a.to_sym] = value if value
+        end
+
+        # Credit Card
+        @request[:Request][:Account][:CardInfo] = {}
+        %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
+          value = credit_card.send((c.downcase).to_sym)
+          @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
+        end
+
+        # Creates parameters
+        @params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
+        @connection = RubyPsigate::Connection.new(credential.endpoint)
+        @response = @connection.post(@params)
+        @response = Response.new(@response)
+        @response
+      rescue ConnectionError => e
+        @response = false
       end
-      
-      # Action
-      @request[:Request][:Action] = "AMA01"
-      
-      # Account Details
-      @request[:Request][:Account] = {}
-      %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
-        value = self.send((a.downcase).to_sym)
-        @request[:Request][:Account][a.to_sym] = value if value
-      end
-      
-      # Credit Card
-      @request[:Request][:Account][:CardInfo] = {}
-      %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
-        value = credit_card.send((c.downcase).to_sym)
-        @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
-      end
-      
-      # Creates parameters
-      @params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
-      @connection = RubyPsigate::Connection.new(credential.endpoint)
-      @response = @connection.post(@params)
-      @response = Response.new(@response)
-      @response
+    end
+    
+    def update
+      # TODO
+    end
+    
+    def charge
+      # TODO      
+    end
+    
+    def refund
+      # TODO
     end
     
   end
