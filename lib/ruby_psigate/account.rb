@@ -62,7 +62,7 @@ module RubyPsigate
       
       # Creates parameters
       @params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
-      @connection = Connection.new(credential.endpoint)
+      @connection = RubyPsigate::Connection.new(credential.endpoint)
       @response = @connection.post(@params)
       @response = Response.new(@response)
       @response

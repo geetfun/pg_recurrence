@@ -5,6 +5,7 @@ source "http://rubygems.org"
 
 gem "crack"
 gem "pg_serializer"
+gem "pg_connection"
 gem "pg_creditcard"
 
 # Add dependencies to develop your gem here.
