@@ -61,7 +61,7 @@ module RubyPsigate
         :credit_card => @credit_card,
         :credential => @credential
       )
-      RubyPsigate::Connection.any_instance.expects(:post).raises(RubyPsigate::ConnectionError)
+      RubyPsigate::Connection.any_instance.stubs(:post).raises(RubyPsigate::ConnectionError)
       result = @account.register
       assert !result.success?
     end
@@ -69,9 +69,10 @@ module RubyPsigate
     # Finding an existing account
     
     def test_finding_an_account_with_account_id
-      account_id = nil
-      @account = Account.find(account_id)
-      assert @account
+      @credential = credentials
+      account_id = "000000000000000911" # This is a known account ID on Psigate's test server
+      @account = Account.find(account_id, @credential)
+      assert_equal "SHIT", @account.name
     end
 
     # Delete account

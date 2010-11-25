@@ -33,8 +33,33 @@ module RubyPsigate
       @credit_card = cc_object
     end
     
-    def self.find(remote_account_id)
-      # Finds an existing account by account_id
+    # Finds an existing account by account_id
+    def self.find(remote_account_id, credential)
+      begin
+        # Creates placeholder hash
+        @request = {}
+        @request[:Request] = {}
+
+        # Add credentials
+        %w( CID UserID Password ).each do |c|
+          @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
+        end
+        
+        # Action
+        @request[:Request][:Action] = "AMA05"
+        
+        # Condition
+        @request[:Request][:Condition] = {:AccountID => remote_account_id}
+        
+        # Creates parameters
+        @params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
+        @connection = RubyPsigate::Connection.new(credential.endpoint)
+        @response = @connection.post(@params)
+        @response = Response.new(@response)
+        @response
+      rescue ConnectionError => e
+        @response = Response.new
+      end
     end
     
     def delete

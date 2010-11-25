@@ -59,9 +59,7 @@ module RubyPsigate
     )
     
     def initialize(xml_response)
-      if xml_response
-        @xml_response = Crack::XML.parse(xml_response)
-      end
+      @xml_response = Crack::XML.parse(xml_response)
     end
     
     def response
