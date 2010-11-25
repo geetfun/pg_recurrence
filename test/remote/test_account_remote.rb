@@ -61,7 +61,7 @@ module RubyPsigate
         :credit_card => @credit_card,
         :credential => @credential
       )
-      
+      RubyPsigate::Connection.any_instance.expects(:post).raises(RubyPsigate::ConnectionError)
       result = @account.register
       assert !result.success?
     end

@@ -78,7 +78,7 @@ module RubyPsigate
         @response = Response.new(@response)
         @response
       rescue ConnectionError => e
-        @response = false
+        @response = Response.new(false)
       end
     end
     

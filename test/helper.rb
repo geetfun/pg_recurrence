@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler'
+require 'mocha'
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e

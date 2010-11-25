@@ -59,8 +59,9 @@ module RubyPsigate
     )
     
     def initialize(xml_response)
-      @xml_response = Crack::XML.parse(xml_response)
-      self
+      if xml_response
+        @xml_response = Crack::XML.parse(xml_response)
+      end
     end
     
     def response
@@ -68,6 +69,7 @@ module RubyPsigate
     end
     
     def success?
+      return false unless @xml_response
       ACCOUNT_SUCCESS_CODES.include?(self.returncode)
     end
     
