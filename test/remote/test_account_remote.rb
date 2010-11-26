@@ -128,8 +128,7 @@ module RubyPsigate
       connection.expects(:post).raises(RubyPsigate::ConnectionError)
       RubyPsigate::Connection.expects(:new).returns(connection)
       
-      @account = Account.destroy(account_id)
-      assert_not_nil @account
+      assert !Account.destroy(account_id)
     end
 
     # Update account
