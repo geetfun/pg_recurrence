@@ -119,15 +119,8 @@ module RubyPsigate
     
     def register
       begin
-        # Creates placeholder hash
-        @request = {}
-        @request[:Request] = {}
-
-        # Add credentials
-        %w( CID UserID Password ).each do |c|
-          @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
-        end
-
+        initialize_request
+        
         # Action
         @request[:Request][:Action] = "AMA01"
 
@@ -158,15 +151,8 @@ module RubyPsigate
     
     def update
       begin
-        # Creates placeholder hash
-        @request = {}
-        @request[:Request] = {}
-
-        # Add credentials
-        %w( CID UserID Password ).each do |c|
-          @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
-        end
-
+        initialize_request
+        
         # Action
         @request[:Request][:Action] = "AMA02"
         
@@ -198,6 +184,19 @@ module RubyPsigate
     
     def refund
       # TODO
+    end
+    
+    private
+    
+    def initialize_request
+      # Creates placeholder hash
+      @request = {}
+      @request[:Request] = {}
+      
+      # Add credentials
+      %w( CID UserID Password ).each do |c|
+        @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
+      end
     end
     
   end
