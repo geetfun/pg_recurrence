@@ -64,16 +64,47 @@ module RubyPsigate
         @connection = RubyPsigate::Connection.new(credential.endpoint)
         @response = @connection.post(@params)
         @response = Response.new(@response)
+        if @response.returnmessage == "No Payment Accounts Information found."
+          @response = false
+        end
         @response
       rescue ConnectionError => e
         @response = false
       end
     end
     
-    def delete
-      # Deletes account
-      
-      remote_account_id = account_id
+    def self.destroy(remote_account_id)
+      begin
+        # Creates placeholder hash
+        @request = {}
+        @request[:Request] = {}
+
+        # Add credentials
+        %w( CID UserID Password ).each do |c|
+          @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
+        end
+        
+        # Action
+        # This will disable the account only
+        @request[:Request][:Action] = "AMA09"
+        
+        # Condition
+        @request[:Request][:Condition] = {:AccountID => remote_account_id}
+
+        # Creates parameters
+        @params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
+        @connection = RubyPsigate::Connection.new(credential.endpoint)
+        @response = @connection.post(@params)
+        @response = Response.new(@response)
+        if @response.returncode == "RPA-0040"
+          @response = nil
+        else
+          @response
+        end
+        @response
+      rescue ConnectionError => e
+        @response = false
+      end
     end
     
     def register

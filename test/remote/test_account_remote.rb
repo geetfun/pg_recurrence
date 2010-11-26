@@ -20,6 +20,28 @@ module RubyPsigate
       )
     end
     
+    def create_deletable_account
+      @credential = credentials
+      @credit_card = credit_card
+
+      @account = Account.new(
+        :name => "Home Simpson",
+        :email => "homer@simpsons.com",
+        :address1 => "1234 Evergrove Drive",
+        :address2 => nil,
+        :city => "Toronto",
+        :province => "ON",
+        :postal_code => "M2N3A3",
+        :country => "CA",
+        :phone => "416-111-1111",
+        :credit_card => @credit_card,
+        :credential => @credential
+      )
+
+      result = @account.register
+      result
+    end
+    
     # Add new account
 
     def test_successfully_in_adding_account
@@ -76,20 +98,29 @@ module RubyPsigate
       
       account_id = "000000000000000911" # This is a known account ID on Psigate's test server
       @account = Account.find(account_id)
-      assert @account
+      assert @account, "Did not find account when it should be found"
+    end
+    
+    def test_failure_in_finding_account
+      @credential = credentials
+      Account.credential = @credential
+      
+      @account = Account.find("fake_account_id")
+      assert !@account
     end
 
     # Delete account
 
     def test_successfully_deleting_account
-
-
-      response = @account.delete
-      assert response.success?
+      temporary_account = create_deletable_account
+      account_id = temporary_account.accountid
+      Account.credential = credentials
+      @account = Account.destroy(account_id)
+      assert_nil @account
     end
 
     def test_failure_in_deleting_account
-
+      
 
       response = @account.delete
       assert !response.success?
