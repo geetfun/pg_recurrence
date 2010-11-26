@@ -33,8 +33,16 @@ module RubyPsigate
       @credit_card = cc_object
     end
     
+    def self.credential=(c)
+      @credential = c
+    end
+    
+    def self.credential
+      @credential
+    end
+    
     # Finds an existing account by account_id
-    def self.find(remote_account_id, credential)
+    def self.find(remote_account_id)
       begin
         # Creates placeholder hash
         @request = {}
@@ -58,7 +66,7 @@ module RubyPsigate
         @response = Response.new(@response)
         @response
       rescue ConnectionError => e
-        @response = Response.new
+        @response = false
       end
     end
     
@@ -103,7 +111,7 @@ module RubyPsigate
         @response = Response.new(@response)
         @response
       rescue ConnectionError => e
-        @response = Response.new(false)
+        @response = false
       end
     end
     

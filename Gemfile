@@ -7,6 +7,7 @@ gem "crack"
 gem "pg_serializer"
 gem "pg_connection"
 gem "pg_creditcard"
+gem "mocha"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
