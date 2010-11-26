@@ -25,7 +25,7 @@ module RubyPsigate
       @credit_card = credit_card
 
       @account = Account.new(
-        :name => "Home Simpson",
+        :name => "Homer Simpson",
         :email => "homer@simpsons.com",
         :address1 => "1234 Evergrove Drive",
         :address2 => nil,
@@ -49,7 +49,7 @@ module RubyPsigate
       @credit_card = credit_card
 
       @account = Account.new(
-        :name => "Home Simpson",
+        :name => "Homer Simpson",
         :email => "homer@simpsons.com",
         :address1 => "1234 Evergrove Drive",
         :address2 => nil,
@@ -133,14 +133,17 @@ module RubyPsigate
 
     # Update account
 
-    def test_successfully_updating_account
-
-      response = @account.update
-    end
-
-    def test_failure_in_updating_account
-
-    end
+    # def test_successfully_updating_account
+    #   temporary_account = create_deletable_account
+    #   account_id = temporary_account.accountid
+    #   @account = Account.update(account_id, :name => "Marge Simpson")
+    #   
+    #   response = @account.update
+    # end
+    # 
+    # def test_failure_in_updating_account
+    # 
+    # end
     
     
   end
