@@ -85,14 +85,7 @@ module RubyPsigate
     
     def self.destroy(remote_account_id)
       begin
-        # Creates placeholder hash
-        @request = {}
-        @request[:Request] = {}
-
-        # Add credentials
-        %w( CID UserID Password ).each do |c|
-          @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
-        end
+        initialize_request
         
         # Action
         # This will disable the account only
