@@ -120,10 +120,16 @@ module RubyPsigate
     end
 
     def test_failure_in_deleting_account
+      temporary_account = create_deletable_account
+      account_id = temporary_account.accountid
+      Account.credential = credentials
       
-
-      response = @account.delete
-      assert !response.success?
+      connection = mock()
+      connection.expects(:post).raises(RubyPsigate::ConnectionError)
+      RubyPsigate::Connection.expects(:new).returns(connection)
+      
+      @account = Account.destroy(account_id)
+      assert_not_nil @account
     end
 
     # Update account
