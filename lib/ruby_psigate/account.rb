@@ -5,12 +5,14 @@ module RubyPsigate
     attr_accessor :name, :company, :email, :comments
     attr_accessor :address1, :address2, :city, :province, :postal_code, :country, :phone, :fax
     
+    alias_method :accountid=, :account_id=
     alias_method :accountid, :account_id
     alias_method :state, :province
     alias_method :state=, :province=
     alias_method :zipcode, :postal_code
     alias_method :zipcode=, :postal_code=
     alias_method :postalcode, :postal_code
+    alias_method :postalcode=, :postal_code=
     
     attr_reader :credit_card, :credential
     
@@ -65,11 +67,19 @@ module RubyPsigate
         @response = @connection.post(@params)
         @response = Response.new(@response)
         if @response.returnmessage == "No Payment Accounts Information found."
-          @response = false
+          @response = nil
+        else
+          attributes = {}
+          %w( AccountID Status Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
+            attributes[a.downcase.to_sym] = @response.send(:a)
+          end
+          @account = Account.new(attributes)
+          @account.credential = credential
+          @response = @account
         end
         @response
       rescue ConnectionError => e
-        @response = false
+        @response = nil
       end
     end
     
@@ -147,7 +157,36 @@ module RubyPsigate
     end
     
     def update
-      # TODO
+      begin
+        # Creates placeholder hash
+        @request = {}
+        @request[:Request] = {}
+
+        # Add credentials
+        %w( CID UserID Password ).each do |c|
+          @request[:Request][c.to_sym] = credential.send((c.downcase).to_sym)
+        end
+
+        # Action
+        @request[:Request][:Action] = "AMA02"
+        
+        # Account Details Update
+        @request[:Request][:Update] = {}
+        %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
+          value = self.send((a.downcase).to_sym)
+          @request[:Request][:Update][a.to_sym] = value if value
+        end
+        
+        # Creates parameters
+        @params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
+        @connection = RubyPsigate::Connection.new(credential.endpoint)
+        @response = @connection.post(@params)
+        @response = Response.new(@response)
+        @response
+      rescue ConnectionError => e
+        @response = false
+      end
+      
     end
     
     def charge

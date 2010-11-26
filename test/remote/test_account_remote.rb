@@ -108,6 +108,15 @@ module RubyPsigate
       @account = Account.find("fake_account_id")
       assert !@account
     end
+    
+    def test_find_returns_account_instance
+      @credential = credentials
+      Account.credential = @credential
+      
+      account_id = "000000000000000911" # This is a known account ID on Psigate's test server
+      @account = Account.find(account_id)
+      assert_equal Account, @account.class
+    end
 
     # Delete account
 
@@ -133,17 +142,32 @@ module RubyPsigate
 
     # Update account
 
-    # def test_successfully_updating_account
-    #   temporary_account = create_deletable_account
-    #   account_id = temporary_account.accountid
-    #   @account = Account.update(account_id, :name => "Marge Simpson")
-    #   
-    #   response = @account.update
-    # end
-    # 
-    # def test_failure_in_updating_account
-    # 
-    # end
+    def test_successfully_updating_account
+      temporary_account = create_deletable_account
+      account_id = temporary_account.accountid
+      # @account = Account.update(account_id, 
+      #   :name => "Marge Simpson",
+      #   :company => "NBC Corp",
+      #   :address1 => "577 Street",
+      #   :address2 => "Apt 888",
+      #   :city => "Ottawa",
+      #   :province => "ON",
+      #   :country => "Canada",
+      #   :postalcode => "A1A1A1",
+      #   :phone => "1234567890",
+      #   :fax => "1234567890",
+      #   :email => "marge@nbc.com",
+      #   :comments => "Some comment"
+      # )
+      Account.credential = credentials
+      @account = Account.find(account_id)
+      @account.name = "Marge Simpson"
+      assert @account.update
+    end
+    
+    def test_failure_in_updating_account
+      
+    end
     
     
   end
