@@ -163,6 +163,10 @@ module RubyPsigate
       @account = Account.find(account_id)
       @account.name = "Marge Simpson"
       assert @account.update
+      raise "#{@account.inspect}"
+      
+      @account = Account.find(account_id)
+      assert_equal "Masdfadf", @account.name
     end
     
     def test_failure_in_updating_account

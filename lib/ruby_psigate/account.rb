@@ -71,7 +71,7 @@ module RubyPsigate
         else
           attributes = {}
           %w( AccountID Status Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
-            attributes[a.downcase.to_sym] = @response.send(:a)
+            attributes[a.downcase.to_sym] = @response.send(a.downcase.to_sym)
           end
           @account = Account.new(attributes)
           @account.credential = credential
@@ -170,9 +170,12 @@ module RubyPsigate
         # Action
         @request[:Request][:Action] = "AMA02"
         
+        # Condition
+        @request[:Request][:Condition] = {:AccountID => accountid}
+        
         # Account Details Update
         @request[:Request][:Update] = {}
-        %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
+        %w( Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
           value = self.send((a.downcase).to_sym)
           @request[:Request][:Update][a.to_sym] = value if value
         end
