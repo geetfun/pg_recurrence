@@ -173,34 +173,7 @@ module RubyPsigate
         @account.credit_card = creditcard
       end
     end
-    
-    # Holder for credential object
-    
-    def test_credential_object_holder
-      @account = Account.new
-      assert @account.respond_to?(:credential=), "Account instance does not have credential object setter"
-    end
-    
-    def test_raises_error_if_credential_is_not_instance_of_credential
-      @account = Account.new
-      assert_raise(ArgumentError) do
-        @account.credential = "hello world"
-      end
-    end
-    
-    def test_raises_no_error_if_credential_is_instance_of_credential
-      credential = Credential.new(
-        :CID => "test",
-        :UserID => "test",
-        :password => "test"
-      )
-      
-      @account = Account.new
-      assert_nothing_raised do
-        @account.credential = credential
-      end
-    end
-    
+        
     # Creating instances from hash
     
     def test_new_account_instance_accepts_hash_of_values

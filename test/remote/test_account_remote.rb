@@ -35,7 +35,7 @@ module RubyPsigate
         :country => "CA",
         :phone => "416-111-1111",
         :credit_card => @credit_card,
-        :credential => @credential
+        :credentials => @credential
       )
 
       result = @account.register
@@ -59,7 +59,7 @@ module RubyPsigate
         :country => "CA",
         :phone => "416-111-1111",
         :credit_card => @credit_card,
-        :credential => @credential
+        :credentials => @credential
       )
 
       result = @account.register

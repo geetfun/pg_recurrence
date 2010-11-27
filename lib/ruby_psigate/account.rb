@@ -6,13 +6,8 @@ module RubyPsigate
     alias_method :state=, :province=
     alias_method :zipcode, :postalcode
     alias_method :zipcode=, :postalcode=
-    attr_reader :credit_card, :credentials
+    attr_reader :credit_card
 
-    def credentials=(credentials)
-      raise ArgumentError unless credentials.is_a?(Credential)
-      @credentials = credentials
-    end
-    
     def credit_card=(credit_card)
       raise ArgumentError unless credit_card.is_a?(PgCreditcard)
       @credit_card = credit_card
@@ -26,6 +21,7 @@ module RubyPsigate
         end
       end
     end
+    
     
 
     # 
