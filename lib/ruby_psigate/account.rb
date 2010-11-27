@@ -1,20 +1,22 @@
 module RubyPsigate
   class Account < Request
     
-    attr_accessor :account_id
-    attr_accessor :name, :company, :email, :comments
-    attr_accessor :address1, :address2, :city, :province, :postal_code, :country, :phone, :fax
-    
-    alias_method :accountid=, :account_id=
-    alias_method :accountid, :account_id
+    attr_accessor :accountid, :name, :company, :address1, :address2, :city, :province, :postalcode, :country, :phone, :fax, :email, :comments
     alias_method :state, :province
     alias_method :state=, :province=
-    alias_method :zipcode, :postal_code
-    alias_method :zipcode=, :postal_code=
-    alias_method :postalcode, :postal_code
-    alias_method :postalcode=, :postal_code=
+    alias_method :zipcode, :postalcode
+    alias_method :zipcode=, :postalcode=
+    attr_reader :credit_card, :credentials
+
+    def credentials=(credentials)
+      raise ArgumentError unless credentials.is_a?(Credential)
+      @credentials = credentials
+    end
     
-    attr_reader :credit_card, :credential
+    def credit_card=(credit_card)
+      raise ArgumentError unless credit_card.is_a?(PgCreditcard)
+      @credit_card = credit_card
+    end
     
     def initialize(attributes={})
       attributes.each_pair do |attribute, value|
@@ -24,16 +26,8 @@ module RubyPsigate
         end
       end
     end
-    # 
-    # def credential=(credential_object)
-    #   raise ArgumentError unless credential_object.is_a?(Credential)
-    #   @credential = credential_object
-    # end
-    # 
-    # def credit_card=(cc_object)
-    #   raise ArgumentError unless cc_object.is_a?(PgCreditcard)
-    #   @credit_card = cc_object
-    # end
+    
+
     # 
     # def self.credential=(c)
     #   @credential = c

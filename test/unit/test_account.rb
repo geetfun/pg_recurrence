@@ -5,12 +5,12 @@ module RubyPsigate
     
     def test_account_id_setter
       @account = Account.new
-      assert @account.respond_to?(:account_id=), "Account instance does not have account_id setter"
+      assert @account.respond_to?(:accountid=), "Account instance does not have accountid setter"
     end
   
     def test_account_id_getter
       @account = Account.new
-      assert @account.respond_to?(:account_id), "Account instance does not have account_id getter"
+      assert @account.respond_to?(:accountid), "Account instance does not have accountid getter"
     end
 
     def test_name_setter
@@ -87,24 +87,12 @@ module RubyPsigate
     
     def test_postal_code_setter
       @account = Account.new
-      assert @account.respond_to?(:postal_code=), "Account instance does not have postal code setter"
+      assert @account.respond_to?(:postalcode=), "Account instance does not have postal code setter"
     end
 
     def test_postal_code_getter
       @account = Account.new
-      assert @account.respond_to?(:postal_code), "Account instance does not have postal code getter"
-    end
-
-    def test_zipcode_setter_is_same_as_postal_code_setter
-      @account = Account.new
-      @account.zipcode = "Something"
-      assert_equal @account.postal_code, @account.zipcode
-    end
-    
-    def test_zipcode_getter_is_same_as_postal_code_getter
-      @account = Account.new
-      @account.postal_code = "Something"
-      assert_equal @account.zipcode, @account.postal_code
+      assert @account.respond_to?(:postalcode), "Account instance does not have postal code getter"
     end
 
     def test_country_setter
@@ -217,7 +205,7 @@ module RubyPsigate
     
     def test_new_account_instance_accepts_hash_of_values
       @account = Account.new(
-        :account_id => "account_id_123",
+        :accountid => "account_id_123",
         :name => "Homer Simpson"
       )
       
@@ -226,7 +214,7 @@ module RubyPsigate
     
     def test_new_account_instance_with_hash_will_assign_instance_variables
       attributes = {
-        :account_id => "account_id_123",
+        :accountid => "account_id_123",
         :name => "Homer Simpson",
         :country => "USA",
         :zipcode => "12345",
@@ -235,7 +223,7 @@ module RubyPsigate
       
       @account = Account.new(attributes)
       
-      assert_equal @account.account_id, "account_id_123"
+      assert_equal @account.accountid, "account_id_123"
       assert_equal @account.name, "Homer Simpson"
       assert_equal @account.country, "USA"
       assert_equal @account.zipcode, "12345"
