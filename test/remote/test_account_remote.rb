@@ -6,19 +6,12 @@ module RubyPsigate
     # Add new account
     def test_add_account
       Request.credential = credential
-      @account = Account.new(
-        :name => "Homer Simpson",
-        :email => "homer@simpsons.com",
-        :address1 => "1234 Evergrove Drive",
-        :address2 => nil,
-        :city => "Toronto",
-        :province => "ON",
-        :postal_code => "M2N3A3",
-        :country => "CA",
-        :phone => "416-111-1111",
-        :credit_card => credit_card,
-      )
+      @account = Account.new(valid_account_attributes)
       @account.save
+    end
+    
+    def test_saving_account_assigns_accountid
+      
     end
     
     def test_saving_account_returns_account_instance
