@@ -10,9 +10,9 @@ module RubyPsigate
       @@credential = x
     end
     
-    def initialize
+    def initialize(attributes={})
       @request = {}
-      @request[:Request] = {}      
+      @request[:Request] = {}
     end
 
     

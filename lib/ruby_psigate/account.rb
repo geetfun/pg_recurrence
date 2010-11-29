@@ -20,9 +20,40 @@ module RubyPsigate
           self.send(setter, value)
         end
       end
+      super
     end
     
     
+    def save
+      begin
+        # Action
+        @request[:Request][:Action] = "AMA01"
+
+        # Account Details
+        @request[:Request][:Account] = {}
+        %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
+          value = self.send((a.downcase).to_sym)
+          @request[:Request][:Account][a.to_sym] = value if value
+        end
+    
+        # Credit Card
+        @request[:Request][:Account][:CardInfo] = {}
+        %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
+          value = credit_card.send((c.downcase).to_sym)
+          @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
+        end
+        
+        # Creates parameters
+        params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
+        connection = RubyPsigate::Connection.new(self.class.credential.endpoint)
+        response = connection.post(params)
+        response = Response.new(response)
+        result = response.success? ? true : false
+      rescue ConnectionError => e
+        result = false
+      end
+      result
+    end
 
     # 
     # def self.credential=(c)
