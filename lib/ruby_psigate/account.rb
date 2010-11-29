@@ -1,7 +1,7 @@
 module RubyPsigate
   class Account < Request
     
-    attr_accessor :accountid, :name, :company, :address1, :address2, :city, :province, :postalcode, :country, :phone, :fax, :email, :comments
+    attr_accessor :accountid, :name, :company, :address1, :address2, :city, :province, :postalcode, :country, :phone, :fax, :email, :comments, :status
     alias_method :state, :province
     alias_method :state=, :province=
     alias_method :zipcode, :postalcode
@@ -49,6 +49,51 @@ module RubyPsigate
         response = connection.post(params)
         response = Response.new(response)
         result = response.success? ? true : false
+
+        if response.success?
+          %w( accountid name company address1 address2 city province postalcode country phone fax comments status ).each do |attribute|
+            self.send("#{attribute}=".to_sym, response.send(attribute.to_sym))
+          end
+          
+          result = true
+        else
+          result = false
+        end
+        # eError: <?xml version="1.0" encoding="UTF-8"?>
+        # <Response>
+        # <CID>1000001</CID>
+        # <Action>REGISTER NEW PAYMENT ACCOUNTS</Action>
+        # <ReturnCode>RPA-0000</ReturnCode>
+        # <ReturnMessage>Register Payment Accounts completed successfully.</ReturnMessage>
+        # <Account>
+        # <ReturnCode>RPA-0010</ReturnCode>
+        # <ReturnMessage>Register Payment Account completed successfully.</ReturnMessage>
+        # <AccountID>2010112817085</AccountID>
+        # <Status></Status>
+        # <Name>Homer Simpson</Name>
+        # <Company></Company>
+        # <Address1>1234 Evergrove Drive</Address1>
+        # <Address2></Address2>
+        # <City>Toronto</City>
+        # <Province>ON</Province>
+        # <Postalcode></Postalcode>
+        # <Country>CA</Country>
+        # <Phone>416-111-1111</Phone>
+        # <Fax></Fax>
+        # <Email>homer@simpsons.com</Email>
+        # <Comments></Comments>
+        # <CardInfo>
+        # <Status></Status>
+        # <SerialNo>1</SerialNo>
+        # <AccountID>2010112817085</AccountID>
+        # <CardHolder>Homer Simpsons</CardHolder>
+        # <CardNumber>411111...1111</CardNumber>
+        # <CardExpMonth>03</CardExpMonth>
+        # <CardExpYear>20</CardExpYear>
+        # <CardType>VISA</CardType>
+        # </CardInfo>
+        # </Account>
+        # </Response>
       rescue ConnectionError => e
         result = false
       end
