@@ -47,7 +47,7 @@ class Test::Unit::TestCase
   end
   
   def create_account
-    @account = Account.new(
+    @account = RubyPsigate::Account.new(
       :name => "Homer Simpson",
       :email => "homer@simpsons.com",
       :address1 => "1234 Evergrove Drive",
@@ -57,12 +57,11 @@ class Test::Unit::TestCase
       :postal_code => "M2N3A3",
       :country => "CA",
       :phone => "416-111-1111",
-      :credit_card => @credit_card,
-      :credentials => @credential
+      :credit_card => credit_card
     )
 
-    result = @account.register
-    result
+    @account.save
+    @account
   end
   
   

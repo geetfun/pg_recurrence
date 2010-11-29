@@ -35,12 +35,14 @@ module RubyPsigate
           value = self.send((a.downcase).to_sym)
           @request[:Request][:Account][a.to_sym] = value if value
         end
-    
+            
         # Credit Card
-        @request[:Request][:Account][:CardInfo] = {}
-        %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
-          value = credit_card.send((c.downcase).to_sym)
-          @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
+        if !credit_card.nil? && credit_card.valid?
+          @request[:Request][:Account][:CardInfo] = {}
+          %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
+            value = credit_card.send((c.downcase).to_sym)
+            @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
+          end
         end
         
         # Creates parameters
@@ -48,9 +50,8 @@ module RubyPsigate
         connection = RubyPsigate::Connection.new(self.class.credential.endpoint)
         response = connection.post(params)
         response = Response.new(response)
-        result = response.success? ? true : false
 
-        if response.success?
+        if response.success? && response.returncode == "RPA-0000"
           %w( accountid name company address1 address2 city province postalcode country phone fax comments status ).each do |attribute|
             self.send("#{attribute}=".to_sym, response.send(attribute.to_sym))
           end
@@ -59,41 +60,6 @@ module RubyPsigate
         else
           result = false
         end
-        # eError: <?xml version="1.0" encoding="UTF-8"?>
-        # <Response>
-        # <CID>1000001</CID>
-        # <Action>REGISTER NEW PAYMENT ACCOUNTS</Action>
-        # <ReturnCode>RPA-0000</ReturnCode>
-        # <ReturnMessage>Register Payment Accounts completed successfully.</ReturnMessage>
-        # <Account>
-        # <ReturnCode>RPA-0010</ReturnCode>
-        # <ReturnMessage>Register Payment Account completed successfully.</ReturnMessage>
-        # <AccountID>2010112817085</AccountID>
-        # <Status></Status>
-        # <Name>Homer Simpson</Name>
-        # <Company></Company>
-        # <Address1>1234 Evergrove Drive</Address1>
-        # <Address2></Address2>
-        # <City>Toronto</City>
-        # <Province>ON</Province>
-        # <Postalcode></Postalcode>
-        # <Country>CA</Country>
-        # <Phone>416-111-1111</Phone>
-        # <Fax></Fax>
-        # <Email>homer@simpsons.com</Email>
-        # <Comments></Comments>
-        # <CardInfo>
-        # <Status></Status>
-        # <SerialNo>1</SerialNo>
-        # <AccountID>2010112817085</AccountID>
-        # <CardHolder>Homer Simpsons</CardHolder>
-        # <CardNumber>411111...1111</CardNumber>
-        # <CardExpMonth>03</CardExpMonth>
-        # <CardExpYear>20</CardExpYear>
-        # <CardType>VISA</CardType>
-        # </CardInfo>
-        # </Account>
-        # </Response>
       rescue ConnectionError => e
         result = false
       end

@@ -2,22 +2,29 @@ require 'helper'
 
 module RubyPsigate
   class TestAccountRemote < Test::Unit::TestCase
+    
+    def setup
+      Request.credential = credential      
+    end
         
-    # Add new account
     def test_add_account
-      Request.credential = credential
       @account = Account.new(valid_account_attributes)
       @account.save
     end
     
     def test_saving_account_assigns_accountid
-      
+      @account = Account.new(valid_account_attributes)
+      assert_nil @account.accountid
+      @account.save
+      assert_not_nil @account.accountid
     end
     
-    def test_saving_account_returns_account_instance
-      
+    def test_failure_adding_account
+      @comparison = create_account
+      @account = Account.new(:accountid => @comparison.accountid)
+      assert !@account.save
     end
-
+    
     # def test_successfully_in_adding_account
     #   @credential = credentials
     #   @credit_card = credit_card
