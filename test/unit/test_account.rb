@@ -3,6 +3,12 @@ require 'helper'
 module RubyPsigate
   class TestAccount < Test::Unit::TestCase
     
+    def setup
+      Request.credential = credential
+    end
+    
+    #####
+    
     def test_account_id_setter
       @account = Account.new
       assert @account.respond_to?(:accountid=), "Account instance does not have accountid setter"

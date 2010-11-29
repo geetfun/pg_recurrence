@@ -20,6 +20,10 @@ module RubyPsigate
       )
       @account.save
     end
+    
+    def test_saving_account_returns_account_instance
+      
+    end
 
     # def test_successfully_in_adding_account
     #   @credential = credentials

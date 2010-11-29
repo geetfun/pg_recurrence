@@ -13,6 +13,12 @@ module RubyPsigate
     def initialize(attributes={})
       @request = {}
       @request[:Request] = {}
+      
+      # Add credentials
+      %w( CID UserID Password ).each do |c|
+        @request[:Request][c.to_sym] = self.class.credential.send((c.downcase).to_sym)
+      end
+      
     end
 
     
