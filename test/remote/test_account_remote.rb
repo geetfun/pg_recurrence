@@ -4,7 +4,8 @@ module RubyPsigate
   class TestAccountRemote < Test::Unit::TestCase
     
     def setup
-      Request.credential = credential      
+      Request.credential = credential
+      @comparison = create_account   
     end
         
     def test_add_account
@@ -20,56 +21,17 @@ module RubyPsigate
     end
     
     def test_failure_adding_account
-      @comparison = create_account
       @account = Account.new(:accountid => @comparison.accountid)
       assert !@account.save
+      assert_not_nil @account.error
+    end
+
+    def test_find_account
+      accountid = @comparison.accountid
+      @account = Account.find(accountid)
+      assert_equal @comparison, @account
     end
     
-    # def test_successfully_in_adding_account
-    #   @credential = credentials
-    #   @credit_card = credit_card
-    # 
-      # @account = Account.new(
-      #   :name => "Homer Simpson",
-      #   :email => "homer@simpsons.com",
-      #   :address1 => "1234 Evergrove Drive",
-      #   :address2 => nil,
-      #   :city => "Toronto",
-      #   :province => "ON",
-      #   :postal_code => "M2N3A3",
-      #   :country => "CA",
-      #   :phone => "416-111-1111",
-      #   :credit_card => @credit_card,
-      #   :credentials => @credential
-      # )
-    # 
-    #   result = @account.register
-    #   assert result
-    # end
-    # 
-    # def test_failure_in_adding_account
-    #   @credential = credentials
-    #   @credit_card = credit_card
-    # 
-    #   @account = Account.new(
-    #     :name => "Home Simpson",
-    #     :email => "homer@simpsons.com",
-    #     :address1 => "1234 Evergrove Drive",
-    #     :address2 => nil,
-    #     :city => "Toronto",
-    #     :province => "ON",
-    #     :postal_code => "M2N3A3",
-    #     :country => "CA",
-    #     :phone => "416-111-1111",
-    #     :credit_card => @credit_card,
-    #     :credential => @credential
-    #   )
-    #   connection = mock()
-    #   connection.expects(:post).raises(RubyPsigate::ConnectionError)
-    #   RubyPsigate::Connection.expects(:new).returns(connection)
-    #   result = @account.register
-    #   assert !result
-    # end
     # 
     # # Finding an existing account
     # 

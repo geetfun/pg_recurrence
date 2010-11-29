@@ -18,6 +18,13 @@ module RubyPsigate
       %w( CID UserID Password ).each do |c|
         @request[:Request][c.to_sym] = self.class.credential.send((c.downcase).to_sym)
       end
+    end
+    
+    def params=(hash={})
+      
+    end
+    
+    def post
       
     end
 

@@ -1,7 +1,7 @@
 module RubyPsigate
   class Account < Request
     
-    attr_accessor :accountid, :name, :company, :address1, :address2, :city, :province, :postalcode, :country, :phone, :fax, :email, :comments, :status
+    attr_accessor :accountid, :name, :company, :address1, :address2, :city, :province, :postalcode, :country, :phone, :fax, :email, :comments, :status, :error
     alias_method :state, :province
     alias_method :state=, :province=
     alias_method :zipcode, :postalcode
@@ -22,7 +22,6 @@ module RubyPsigate
       end
       super
     end
-    
     
     def save
       begin
@@ -58,12 +57,22 @@ module RubyPsigate
           
           result = true
         else
+          self.send(:error=, response.returnmessage)
           result = false
         end
       rescue ConnectionError => e
         result = false
       end
       result
+    end
+    
+    def self.find(accountid)
+      begin
+        @result = Request.new
+        @result.params = nil
+      rescue ConnectionError => e
+        
+      end
     end
 
     # 
