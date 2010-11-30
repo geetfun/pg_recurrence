@@ -68,11 +68,32 @@ module RubyPsigate
     
     def self.find(accountid)
       begin
-        @result = Request.new
-        @result.params = nil
-      rescue ConnectionError => e
+        params = {
+          :Request => {
+            :CID => credential.cid,
+            :UserID => credential.userid,
+            :Password => credential.password,
+            :Action => "AMA05",
+            :Condition => { :AccountID => accountid }
+          }
+        }
         
+        @result = Request.new
+        @result.params = params
+        @result = @result.post
+        if @result.returncode == "RPA-0020"
+          attributes = {}
+          %w( AccountID Status Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |attribute|
+            attributes[attribute.downcase.to_sym] = @result.send(attribute.downcase.to_sym)
+          end
+          @account = Account.new(attributes)
+        else
+          @account = nil
+        end
+      rescue ConnectionError => e
+        @account = nil
       end
+      @account
     end
 
     # 

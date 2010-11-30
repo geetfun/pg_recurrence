@@ -32,6 +32,12 @@ module RubyPsigate
       assert_equal @comparison, @account
     end
     
+    def test_cannot_find_account
+      accountid = "somefakeaccountid"
+      @account = Account.find(accountid)
+      assert_nil @account
+    end
+    
     # 
     # # Finding an existing account
     # 

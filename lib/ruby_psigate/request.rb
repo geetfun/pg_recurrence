@@ -1,5 +1,7 @@
 module RubyPsigate
   class Request
+
+    attr_reader :params
         
     def self.credential
       @@credential
@@ -20,12 +22,21 @@ module RubyPsigate
       end
     end
     
-    def params=(hash={})
-      
+    def params=(hash)
+      raise ArgumentError unless hash.is_a?(Hash)
+      @params = hash
     end
     
     def post
-      
+      begin
+        parameters = RubyPsigate::Serializer.new(params, :header => true).to_xml
+        connection = RubyPsigate::Connection.new(self.class.credential.endpoint)
+        response = connection.post(parameters)
+        response = Response.new(response)
+      rescue ConnectionError => e
+        response = nil
+      end
+      response
     end
 
     
