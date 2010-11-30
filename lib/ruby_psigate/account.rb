@@ -52,9 +52,12 @@ module RubyPsigate
         response = Response.new(response)
 
         if response.success? && response.returncode == "RPA-0000"
-          %w( accountid name company address1 address2 city province postalcode country phone fax comments status ).each do |attribute|
+          %w( accountid name company address1 address2 city province postalcode country phone fax comments ).each do |attribute|
             self.send("#{attribute}=".to_sym, response.send(attribute.to_sym))
           end
+          
+          # Need to refactor this
+          attributes[:status] = response.response["Account"]["Status"]
           
           result = true
         else
@@ -82,13 +85,18 @@ module RubyPsigate
         @result = Request.new
         @result.params = params
         @result = @result.post
+        
+        raise "#{@result.inspect}"      
+        
 
         if @result.returncode == "RPA-0020"
           # Adds basic attributes
           attributes = {}
-          %w( AccountID Status Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |attribute|
+          %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |attribute|
             attributes[attribute.downcase.to_sym] = @result.send(attribute.downcase.to_sym)
           end
+          
+          attributes[:status] = @result.response["Account"]["Status"]
           
           # Back end info
           %w( returnmessage returncode action ).each do |info|
@@ -108,6 +116,28 @@ module RubyPsigate
         @account = nil
       end
       @account
+    end
+
+    def self.disable(accountid)
+      begin
+        params = {
+          :Request => {
+            :CID => credential.cid,
+            :UserID => credential.userid,
+            :Password => credential.password,
+            :Action => "AMA09",
+            :Condition => { :AccountID => accountid }            
+          }
+        }
+        
+        result = Request.new
+        result.params = params
+        result = result.post  
+        response = result.returncode == "RPA-0040" ? true : false
+      rescue ConnectionError => e
+        response = false
+      end
+      response
     end
 
     # 

@@ -5,7 +5,7 @@ module RubyPsigate
     
     def setup
       Request.credential = credential
-      @comparison = create_account   
+      @comparison = create_account
     end
         
     def test_add_account
@@ -38,34 +38,14 @@ module RubyPsigate
       assert_nil @account
     end
     
-    # 
-    # # Finding an existing account
-    # 
-    # def test_finding_an_account_with_account_id
-    #   @credential = credentials
-    #   Account.credential = @credential
-    #   
-    #   account_id = "000000000000000911" # This is a known account ID on Psigate's test server
-    #   @account = Account.find(account_id)
-    #   assert @account, "Did not find account when it should be found"
-    # end
-    # 
-    # def test_failure_in_finding_account
-    #   @credential = credentials
-    #   Account.credential = @credential
-    #   
-    #   @account = Account.find("fake_account_id")
-    #   assert !@account
-    # end
-    # 
-    # def test_find_returns_account_instance
-    #   @credential = credentials
-    #   Account.credential = @credential
-    #   
-    #   account_id = "000000000000000911" # This is a known account ID on Psigate's test server
-    #   @account = Account.find(account_id)
-    #   assert_equal Account, @account.class
-    # end
+    def test_disables_account
+      assert Account.disable(@comparison.accountid)
+      
+      # Tests
+      @account = Account.find(@comparison.accountid)
+      assert_equal "SHIT", @account.inspect
+    end
+    
     # 
     # # Delete account
     # 
