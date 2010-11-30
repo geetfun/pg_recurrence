@@ -29,7 +29,7 @@ module RubyPsigate
     def test_find_account
       accountid = @comparison.accountid
       @account = Account.find(accountid)
-      assert_equal @comparison, @account
+      assert_equal @comparison.accountid, @account.accountid
     end
     
     def test_cannot_find_account

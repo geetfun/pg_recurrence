@@ -2,6 +2,7 @@ module RubyPsigate
   class Account < Request
     
     attr_accessor :accountid, :name, :company, :address1, :address2, :city, :province, :postalcode, :country, :phone, :fax, :email, :comments, :status, :error
+    attr_accessor :returnmessage, :returncode, :action
     alias_method :state, :province
     alias_method :state=, :province=
     alias_method :zipcode, :postalcode
@@ -81,11 +82,24 @@ module RubyPsigate
         @result = Request.new
         @result.params = params
         @result = @result.post
+
         if @result.returncode == "RPA-0020"
+          # Adds basic attributes
           attributes = {}
           %w( AccountID Status Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |attribute|
             attributes[attribute.downcase.to_sym] = @result.send(attribute.downcase.to_sym)
           end
+          
+          # Back end info
+          %w( returnmessage returncode action ).each do |info|
+            attributes[info.downcase.to_sym] = @result.send(info.downcase.to_sym)
+          end
+          
+          # Adds credit card attribute
+          %w( status serialno cardholder cardnumber cardexpmonth cardexpyear cardtype ).each do |cc|
+            # TODO
+          end
+          
           @account = Account.new(attributes)
         else
           @account = nil
