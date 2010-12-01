@@ -57,7 +57,7 @@ module RubyPsigate
           end
           
           # Need to refactor this
-          attributes[:status] = response.response["Account"]["Status"]
+          status = response.response["Account"]["Status"]
           
           result = true
         else
@@ -84,10 +84,7 @@ module RubyPsigate
         
         @result = Request.new
         @result.params = params
-        @result = @result.post
-        
-        raise "#{@result.inspect}"      
-        
+        @result = @result.post        
 
         if @result.returncode == "RPA-0020"
           # Adds basic attributes

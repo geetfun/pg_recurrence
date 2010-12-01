@@ -43,7 +43,7 @@ module RubyPsigate
       
       # Tests
       @account = Account.find(@comparison.accountid)
-      assert_equal "SHIT", @account.inspect
+      assert_equal "N", @account.status
     end
     
     # 
