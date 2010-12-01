@@ -24,6 +24,19 @@ module RubyPsigate
       super
     end
     
+    def attributes=(attributes={})
+      attributes.each_pair do |attribute, value|
+        if self.respond_to?(attribute)
+          setter = "#{attribute}=".to_sym
+          self.send(setter, value)
+        end
+      end
+    end
+    
+    def new_record?
+      
+    end
+    
     def save
       begin
         # Action
@@ -116,35 +129,28 @@ module RubyPsigate
     end
     
     def self.enable(accountid)
-      begin
-        params = {
-          :Request => {
-            :CID => credential.cid,
-            :UserID => credential.userid,
-            :Password => credential.password,
-            :Action => "AMA08",
-            :Condition => { :AccountID => accountid }            
-          }
-        }
-        
-        result = Request.new
-        result.params = params
-        result = result.post  
-        response = result.returncode == "RPA-0046" ? true : false
-      rescue ConnectionError => e
-        response = false
-      end
+      response = self.do(:action => "AMA08", :accountid => accountid, :success => "RPA-0046")
       response      
     end
 
     def self.disable(accountid)
+      response = self.do(:action => "AMA09", :accountid => accountid, :success => "RPA-0040")
+      response
+    end
+    
+    private
+    
+    def self.do(opts = {})
+      action = opts[:action]
+      accountid = opts[:accountid]
+      success = opts[:success]
       begin
         params = {
           :Request => {
             :CID => credential.cid,
             :UserID => credential.userid,
             :Password => credential.password,
-            :Action => "AMA09",
+            :Action => action,
             :Condition => { :AccountID => accountid }            
           }
         }
@@ -152,7 +158,7 @@ module RubyPsigate
         result = Request.new
         result.params = params
         result = result.post  
-        response = result.returncode == "RPA-0040" ? true : false
+        response = result.returncode == success ? true : false
       rescue ConnectionError => e
         response = false
       end

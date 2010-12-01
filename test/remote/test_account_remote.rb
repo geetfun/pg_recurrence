@@ -32,6 +32,11 @@ module RubyPsigate
       assert_equal @comparison.accountid, @account.accountid
     end
     
+    def test_return_true_for_new_record?
+      @account = Account.new
+      assert @account.new_record?
+    end
+    
     def test_cannot_find_account
       accountid = "somefakeaccountid"
       @account = Account.find(accountid)
@@ -55,28 +60,42 @@ module RubyPsigate
       assert_equal "A", @account.status
     end
     
-    # 
-    # # Delete account
-    # 
-    # def test_successfully_deleting_account
-    #   temporary_account = create_deletable_account
-    #   account_id = temporary_account.accountid
-    #   Account.credential = credentials
-    #   @account = Account.destroy(account_id)
-    #   assert_nil @account
-    # end
-    # 
-    # def test_failure_in_deleting_account
-    #   temporary_account = create_deletable_account
-    #   account_id = temporary_account.accountid
-    #   Account.credential = credentials
-    #   
-    #   connection = mock()
-    #   connection.expects(:post).raises(RubyPsigate::ConnectionError)
-    #   RubyPsigate::Connection.expects(:new).returns(connection)
-    #   
-    #   assert !Account.destroy(account_id)
-    # end
+    def test_update_attributes
+      @account = @comparison
+      assert @account.attributes = {
+        :name => "Marge Simpson",
+        :company => "NBC Corp",
+        :address1 => "577 Street",
+        :address2 => "Apt 888",
+        :city => "Ottawa",
+        :province => "ON",
+        :country => "Canada",
+        :postalcode => "A1A1A1",
+        :phone => "1234567890",
+        :fax => "1234567890",
+        :email => "marge@nbc.com",
+        :comments => "Some comment"  
+      }
+    end
+    
+    def test_update_record
+      @account = @comparison
+      @account.attributes = {
+        :name => "Marge Simpson",
+        :company => "NBC Corp",
+        :address1 => "577 Street",
+        :address2 => "Apt 888",
+        :city => "Ottawa",
+        :province => "ON",
+        :country => "Canada",
+        :postalcode => "A1A1A1",
+        :phone => "1234567890",
+        :fax => "1234567890",
+        :email => "marge@nbc.com",
+        :comments => "Some comment"  
+      }
+      assert @account.save
+    end
     # 
     # # Update account
     # 
