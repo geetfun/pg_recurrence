@@ -114,6 +114,28 @@ module RubyPsigate
       end
       @account
     end
+    
+    def self.enable(accountid)
+      begin
+        params = {
+          :Request => {
+            :CID => credential.cid,
+            :UserID => credential.userid,
+            :Password => credential.password,
+            :Action => "AMA08",
+            :Condition => { :AccountID => accountid }            
+          }
+        }
+        
+        result = Request.new
+        result.params = params
+        result = result.post  
+        response = result.returncode == "RPA-0046" ? true : false
+      rescue ConnectionError => e
+        response = false
+      end
+      response      
+    end
 
     def self.disable(accountid)
       begin

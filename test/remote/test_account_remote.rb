@@ -46,6 +46,15 @@ module RubyPsigate
       assert_equal "N", @account.status
     end
     
+    def test_enable_account
+      Account.disable(@comparison.accountid)
+      assert Account.enable(@comparison.accountid)
+      
+      # Tests
+      @account = Account.find(@comparison.accountid)
+      assert_equal "A", @account.status
+    end
+    
     # 
     # # Delete account
     # 
