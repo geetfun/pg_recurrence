@@ -9,6 +9,11 @@ module RubyPsigate
     
     #####
     
+    def test_return_true_for_new_record?
+      @account = Account.new
+      assert @account.new_record?
+    end
+    
     def test_account_id_setter
       @account = Account.new
       assert @account.respond_to?(:accountid=), "Account instance does not have accountid setter"

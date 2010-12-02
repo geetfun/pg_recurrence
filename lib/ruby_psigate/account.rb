@@ -34,27 +34,39 @@ module RubyPsigate
     end
     
     def new_record?
-      
+      status.nil? ? true : false
     end
     
     def save
       begin
         # Action
-        @request[:Request][:Action] = "AMA01"
+        action = new_record? ? "AMA01" : "AMA02"
+        @request[:Request][:Action] = action
 
-        # Account Details
-        @request[:Request][:Account] = {}
-        %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
-          value = self.send((a.downcase).to_sym)
-          @request[:Request][:Account][a.to_sym] = value if value
-        end
+        if new_record?
+          # Account Details
+          @request[:Request][:Account] = {}
+          %w( AccountID Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
+            value = self.send((a.downcase).to_sym)
+            @request[:Request][:Account][a.to_sym] = value if value
+          end
             
-        # Credit Card
-        if !credit_card.nil? && credit_card.valid?
-          @request[:Request][:Account][:CardInfo] = {}
-          %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
-            value = credit_card.send((c.downcase).to_sym)
-            @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
+          # Credit Card
+          if !credit_card.nil? && credit_card.valid?
+            @request[:Request][:Account][:CardInfo] = {}
+            %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
+              value = credit_card.send((c.downcase).to_sym)
+              @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
+            end
+          end
+        else # Is an update
+          # Set account ID
+          @request[:Request][:Condition] = {:AccountID => accountid}
+          
+          @request[:Request][:Update] = {}
+          %w( Name Company Address1 Address2 City Province Postalcode Country Phone Fax Email Comments ).each do |a|
+            value = self.send((a.downcase).to_sym)
+            @request[:Request][:Update][a.to_sym] = value if value
           end
         end
         
@@ -64,14 +76,10 @@ module RubyPsigate
         response = connection.post(params)
         response = Response.new(response)
 
-        if response.success? && response.returncode == "RPA-0000"
+        if response.success? && (response.returncode == "RPA-0000" && new_record?) || (response.returncode == "RPA-0022" && !new_record?)
           %w( accountid name company address1 address2 city province postalcode country phone fax comments ).each do |attribute|
             self.send("#{attribute}=".to_sym, response.send(attribute.to_sym))
-          end
-          
-          # Need to refactor this
-          status = response.response["Account"]["Status"]
-          
+          end          
           result = true
         else
           self.send(:error=, response.returnmessage)
