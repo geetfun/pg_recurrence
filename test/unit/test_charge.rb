@@ -32,7 +32,7 @@ module RubyPsigate
     end
     
     def test_immediate_charge
-      charge = Charge.immediate(:accountid => @account.accountid, :productid => "123456", :quantity => "1", :price => "10")
+      charge = Charge.new(:accountid => @account.accountid, :productid => "123456", :quantity => "1", :price => "10")
       assert charge
     end
     
