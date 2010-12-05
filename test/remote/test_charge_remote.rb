@@ -4,6 +4,9 @@ module RubyPsigate
   class TestChargeRemote < Test::Unit::TestCase
     
     def setup
+      Request.credential = credential
+      Request.storeid = "teststore"
+      Charge.serialno = "1"
       @account = create_account
     end
     
@@ -34,6 +37,16 @@ module RubyPsigate
     def test_immediate_charge
       charge = Charge.new(:accountid => @account.accountid, :productid => "123456", :quantity => "1", :price => "10")
       assert charge.immediately
+    end
+    
+    def test_response
+      charge = Charge.new(:accountid => @account.accountid, :productid => "123456", :quantity => "1", :price => "10")
+      charge.immediately
+      response = charge.response
+      assert response.is_a?(RubyPsigate::Response)
+      
+      # Example of return response
+      #RuntimeError: #<RubyPsigate::Response:0x00000101455130 @xml_response={"Response"=>{"CID"=>"1000001", "Action"=>"REGISTER AN IMMEDIATE CHARGE", "ReturnCode"=>"PSI-0000", "ReturnMessage"=>"The transaction completed successfully.", "Invoice"=>{"StoreID"=>"teststore", "PayerName"=>"Homer Simpsons", "Status"=>"Paid", "InvoiceNo"=>"030705", "ReturnCode"=>"Y:123456:0abcdef:M:X:NNN", "ErrMsg"=>nil, "InvoiceDate"=>"2010.12.05", "ExecDate"=>"2010.12.05", "RBCID"=>"2010120511081813577", "AccountID"=>"2010120518355", "SerialNo"=>"1", "CardNumber"=>"411111...1111", "CardExpMonth"=>"03", "CardExpYear"=>"20", "CardType"=>"VISA", "InvoiceTotal"=>"10.00", "ItemInfo"=>{"ItemSerialNo"=>"1", "ProductID"=>"123456", "Description"=>nil, "Quantity"=>"1.00", "Price"=>"10.00", "Tax1"=>"0.00", "Tax2"=>"0.00", "Cost"=>"0.00", "SubTotal"=>"10.00"}}}}>
     end
     
   end

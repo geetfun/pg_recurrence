@@ -13,7 +13,13 @@ module RubyPsigate
         @@credential = x
       end
       
-      attr_accessor :storeid
+      def storeid
+        @@storeid
+      end
+      
+      def storeid=(x)
+        @@storeid = x
+      end
     end
     
     def initialize(attributes={})

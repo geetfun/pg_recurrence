@@ -2,7 +2,7 @@ module RubyPsigate
   class Account < Request
     
     attr_accessor :accountid, :name, :company, :address1, :address2, :city, :province, :postalcode, :country, :phone, :fax, :email, :comments, :status, :error
-    attr_accessor :returnmessage, :returncode, :action
+    attr_accessor :returnmessage, :returncode, :action, :response
     alias_method :state, :province
     alias_method :state=, :province=
     alias_method :zipcode, :postalcode
@@ -75,6 +75,7 @@ module RubyPsigate
         connection = RubyPsigate::Connection.new(self.class.credential.endpoint)
         response = connection.post(params)
         response = Response.new(response)
+        self.response = response
 
         if response.success? && (response.returncode == "RPA-0000" && new_record?) || (response.returncode == "RPA-0022" && !new_record?)
           %w( accountid name company address1 address2 city province postalcode country phone fax comments ).each do |attribute|
