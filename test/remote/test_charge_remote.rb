@@ -9,8 +9,16 @@ module RubyPsigate
       Charge.serialno = "1"
       @account = create_account
     end
-    
+        
     def test_add_charge
+      @charge = Charge.new(:accountid => @account.accountid, :interval => "M", :rbtrigger => "15", :starttime => "2010.12.25", :endtime => "2011.12.25", :productid => "123456789", :quantity => "1", :price => "99.00")
+      assert @charge.save
+      
+      # Example of return response
+      # RuntimeError: #<RubyPsigate::Response:0x00000102858ee8 @xml_response={"Response"=>{"CID"=>"1000001", "Action"=>"REGISTER NEW CHARGE(S)", "ReturnCode"=>"RRC-0000", "ReturnMessage"=>"Register Recurring Charges completed successfully.", "Charge"=>{"ReturnCode"=>"RRC-0050", "ReturnMessage"=>"Register Recurring Charge completed successfully.", "RBCID"=>"2010120512535613602", "StoreID"=>"teststore", "RBName"=>nil, "AccountID"=>"2010120518622", "SerialNo"=>"1", "Status"=>"A", "Interval"=>"M", "Trigger"=>"15", "ProcessType"=>"A", "InstallmentNo"=>"0", "StartDate"=>"2010.12.25", "EndDate"=>"2011.12.25", "ItemInfo"=>{"Status"=>"A", "ItemSerialNo"=>"1", "ProductID"=>"123456789", "Description"=>nil, "Quantity"=>"1.00", "Price"=>"99.00", "Tax1"=>"0.00", "Tax2"=>"0.00", "Cost"=>"0.00", "SubTotal"=>"99.00"}}}}>
+    end
+    
+    def test_find_charge
       
     end
     

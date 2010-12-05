@@ -14,7 +14,7 @@ GEM
     pg_connection (0.1.2)
     pg_creditcard (0.2.1)
       creditcard
-    pg_serializer (0.1.1)
+    pg_serializer (0.1.2)
       builder
     rake (0.8.7)
     rcov (0.9.9)

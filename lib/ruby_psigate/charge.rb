@@ -1,7 +1,7 @@
 module RubyPsigate
   class Charge < Request
     
-    attr_accessor :accountid, :productid, :quantity, :price, :response
+    attr_accessor :accountid, :productid, :quantity, :price, :interval, :rbtrigger, :starttime, :endtime, :response, :rbname
     
     def self.serialno
       @serialno
@@ -21,6 +21,60 @@ module RubyPsigate
       super
     end
     
+    # def new_record?
+    #   response["Invoice"]["Status"] == "Paid" ? false : true
+    # end
+    
+    # Creates (adds) or Updates recurring charges
+    def save
+      raise ArgumentError, "StoreID is not specified in superclass" if self.class.storeid.nil?
+      begin
+        @request[:Request][:Action] = "RBC01"
+        @request[:Request][:Charge] = {
+          :RBName => rbname,
+          :StoreID => self.class.storeid,
+          :SerialNo => self.class.serialno,
+          :AccountID => accountid,
+          :Interval => interval,
+          :RBTrigger => rbtrigger,
+          :StartTime => starttime,
+          :EndTime => endtime,
+          :ItemInfo => {
+            :ProductID => productid,
+            :Quantity => quantity,
+            :Price => price
+          }
+        }
+                
+        # Creates parameters
+        params = RubyPsigate::Serializer.new(@request, :header => true).to_xml        
+        connection = RubyPsigate::Connection.new(self.class.credential.endpoint)
+        response = connection.post(params)        
+        response = Response.new(response)
+        self.response = response
+                
+        if response.success? && response.returncode == "RRC-0000"
+          result = true
+        else
+          result = false
+        end
+      rescue ConnectionError => e
+        result = false
+      end
+      result
+    end
+    
+    # Deletes a recurring charge
+    def destroy
+      
+    end
+    
+    # Toggles a charge to be active or inactive
+    def toggle(action = :on)
+      
+    end
+    
+    # Immediately charges the credit card
     def immediately
       raise ArgumentError, "StoreID is not specified in superclass" if self.class.storeid.nil?
       begin
