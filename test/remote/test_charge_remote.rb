@@ -18,8 +18,21 @@ module RubyPsigate
       # RuntimeError: #<RubyPsigate::Response:0x00000102858ee8 @xml_response={"Response"=>{"CID"=>"1000001", "Action"=>"REGISTER NEW CHARGE(S)", "ReturnCode"=>"RRC-0000", "ReturnMessage"=>"Register Recurring Charges completed successfully.", "Charge"=>{"ReturnCode"=>"RRC-0050", "ReturnMessage"=>"Register Recurring Charge completed successfully.", "RBCID"=>"2010120512535613602", "StoreID"=>"teststore", "RBName"=>nil, "AccountID"=>"2010120518622", "SerialNo"=>"1", "Status"=>"A", "Interval"=>"M", "Trigger"=>"15", "ProcessType"=>"A", "InstallmentNo"=>"0", "StartDate"=>"2010.12.25", "EndDate"=>"2011.12.25", "ItemInfo"=>{"Status"=>"A", "ItemSerialNo"=>"1", "ProductID"=>"123456789", "Description"=>nil, "Quantity"=>"1.00", "Price"=>"99.00", "Tax1"=>"0.00", "Tax2"=>"0.00", "Cost"=>"0.00", "SubTotal"=>"99.00"}}}}>
     end
     
+    def test_assigns_rbcid_after_save
+      @charge = Charge.new(:accountid => @account.accountid, :interval => "M", :rbtrigger => "15", :starttime => "2010.12.25", :endtime => "2011.12.25", :productid => "123456789", :quantity => "1", :price => "99.00")
+      @charge.save
+      assert_not_nil @charge.rbcid
+    end
+    
     def test_find_charge
+      @test_charge = Charge.new(:accountid => @account.accountid, :interval => "M", :rbtrigger => "15", :starttime => "2010.12.25", :endtime => "2011.12.25", :productid => "123456789", :quantity => "1", :price => "99.00")
+      @test_charge.save
       
+      @charge = Charge.find(@test_charge.rbcid)
+      assert_not_nil @charge
+      
+      # Example of return response
+      # RuntimeError: #<RubyPsigate::Response:0x00000101218188 @xml_response={"Response"=>{"CID"=>"1000001", "Action"=>"RETRIEVE A SUMMARY OF CHARGES", "ReturnCode"=>"RRC-0060", "ReturnMessage"=>"Retrive Recurring Charges Information completed successfully.", "Condition"=>{"RBCID"=>"2010120514303113630"}, "Charge"=>{"RBCID"=>"2010120514303113630", "StoreID"=>"teststore", "RBName"=>nil, "AccountID"=>"2010120518769", "SerialNo"=>"1", "Status"=>"A", "Interval"=>"M", "Trigger"=>"15", "ProcessType"=>"A", "InstallmentNo"=>"1", "StartDate"=>"2010.12.25", "EndDate"=>"2011.12.25"}}}>
     end
     
     def test_update_charge

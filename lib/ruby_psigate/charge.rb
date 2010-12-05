@@ -1,7 +1,7 @@
 module RubyPsigate
   class Charge < Request
     
-    attr_accessor :accountid, :productid, :quantity, :price, :interval, :rbtrigger, :starttime, :endtime, :response, :rbname
+    attr_accessor :accountid, :status, :productid, :quantity, :price, :interval, :rbtrigger, :starttime, :endtime, :response, :rbname, :rbcid
     
     def self.serialno
       @serialno
@@ -9,6 +9,43 @@ module RubyPsigate
     
     def self.serialno=(x)
       @serialno=x
+    end
+    
+    def self.find(rbcid)
+      begin
+        params = {
+          :Request => {
+            :CID => credential.cid,
+            :UserID => credential.userid,
+            :Password => credential.password,
+            :Action => "RBC00",
+            :Condition => { :RBCID => rbcid }
+          }
+        }
+        
+        @result = Request.new
+        @result.params = params
+        @result = @result.post
+        
+        if @result.returncode == "RRC-0060"
+          # Adds basic attributes
+          attributes = {}
+          %w( rbcid interval trigger status ).each do |info|
+            attributes[info.downcase.to_sym] = @result.send(info.downcase.to_sym)
+          end
+          
+          attributes["starttime"] = @result.startdate
+          attributes["endtime"] = @result.enddate
+          attributes["response"] = @result.response
+          
+          @charge = Charge.new(attributes)
+        else
+          @charge = nil
+        end
+      rescue ConnectionError => e
+        @charge = nil
+      end
+      @charge
     end
     
     def initialize(attributes={})
@@ -54,6 +91,7 @@ module RubyPsigate
         self.response = response
                 
         if response.success? && response.returncode == "RRC-0000"
+          self.rbcid = response.rbcid
           result = true
         else
           result = false
