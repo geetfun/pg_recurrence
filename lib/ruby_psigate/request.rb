@@ -2,14 +2,18 @@ module RubyPsigate
   class Request
 
     attr_reader :params
-        
-    def self.credential
-      @@credential
-    end
     
-    def self.credential=(x)
-      raise ArgumentError unless x.is_a?(Credential)
-      @@credential = x
+    class << self
+      def credential
+        @@credential
+      end
+
+      def credential=(x)
+        raise ArgumentError unless x.is_a?(Credential)
+        @@credential = x
+      end
+      
+      attr_accessor :storeid
     end
     
     def initialize(attributes={})

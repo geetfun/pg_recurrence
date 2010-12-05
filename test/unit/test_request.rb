@@ -7,6 +7,14 @@ module RubyPsigate
       @credential = Credential.new(:CID => "test", :UserID => "test", :password => "test")
       Request.credential = @credential
     end
+    
+    def test_storeid_setter
+      assert Request.respond_to?(:storeid=)
+    end
+    
+    def test_storeid_getter
+      assert Request.respond_to?(:storeid)
+    end
 
     def test_set_credential_setter_on_class_level
       assert Request.respond_to?(:credential=)

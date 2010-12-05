@@ -1,7 +1,7 @@
 require 'helper'
 
 module RubyPsigate
-  class TestCharge < Test::Unit::TestCase
+  class TestChargeRemote < Test::Unit::TestCase
     
     def setup
       @account = create_account
@@ -33,7 +33,7 @@ module RubyPsigate
     
     def test_immediate_charge
       charge = Charge.new(:accountid => @account.accountid, :productid => "123456", :quantity => "1", :price => "10")
-      assert charge
+      assert charge.immediately
     end
     
   end
