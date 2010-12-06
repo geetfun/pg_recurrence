@@ -59,20 +59,18 @@ module RubyPsigate
       # RuntimeError: #<RubyPsigate::Response:0x00000100944098 @xml_response={"Response"=>{"CID"=>"1000001", "Action"=>"UPDATE A CHARGE", "ReturnCode"=>"RRC-0072", "ReturnMessage"=>"Update Recurring Charge Information completed successfully.", "Condition"=>{"RBCID"=>"2010120522260613649"}, "Update"=>{"Interval"=>"A", "SerialNo"=>"2", "RBName"=>"New Name"}}}>
     end
     
-    def test_delete_charge
-      
-    end
-    
-    def test_retrieve_charge
-      
-    end
-    
     def test_enable_charge
+      @test_charge = Charge.new(:accountid => @account.accountid, :interval => "M", :rbtrigger => "15", :starttime => "2010.12.25", :endtime => "2011.12.25", :productid => "123456789", :quantity => "1", :price => "99.00")
+      @test_charge.save
       
+      assert Charge.enable(@test_charge.rbcid)      
     end
     
     def test_disable_charge
+      @test_charge = Charge.new(:accountid => @account.accountid, :interval => "M", :rbtrigger => "15", :starttime => "2010.12.25", :endtime => "2011.12.25", :productid => "123456789", :quantity => "1", :price => "99.00")
+      @test_charge.save
       
+      assert Charge.disable(@test_charge.rbcid)
     end
     
     def test_immediate_charge

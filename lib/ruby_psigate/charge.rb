@@ -91,6 +91,14 @@ module RubyPsigate
       result
     end
     
+    def self.enable(rbcid)
+      toggle(rbcid, :on)
+    end
+    
+    def self.disable(rbcid)
+      toggle(rbcid, :off)
+    end
+    
     def initialize(attributes={})
       attributes.each_pair do |attribute, value|
         if self.respond_to?(attribute)
@@ -144,17 +152,7 @@ module RubyPsigate
       end
       result
     end
-    
-    # Deletes a recurring charge
-    def destroy
-      
-    end
-    
-    # Toggles a charge to be active or inactive
-    def toggle(action = :on)
-      
-    end
-    
+        
     # Immediately charges the credit card
     def immediately
       raise ArgumentError, "StoreID is not specified in superclass" if self.class.storeid.nil?
@@ -187,6 +185,39 @@ module RubyPsigate
         result = false
       end
       result
+    end
+    
+    private
+    
+    # Toggles a charge to be active or inactive
+    def self.toggle(rbcid, action)
+      action = case action
+      when :on
+        "RBC08"
+      when :off
+        "RBC09"
+      end
+      
+      begin
+        params = {
+          :Request => {
+            :CID => credential.cid,
+            :UserID => credential.userid,
+            :Password => credential.password,
+            :Action => action,
+            :Condition => { :RBCID => rbcid }
+          }
+        }
+        
+        @result = Request.new
+        @result.params = params
+        @result = @result.post
+        
+        raise "#{@result}"
+      rescue ConnectionError => e
+        
+      end
+      
     end
     
   end
