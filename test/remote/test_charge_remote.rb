@@ -35,8 +35,28 @@ module RubyPsigate
       # RuntimeError: #<RubyPsigate::Response:0x00000101218188 @xml_response={"Response"=>{"CID"=>"1000001", "Action"=>"RETRIEVE A SUMMARY OF CHARGES", "ReturnCode"=>"RRC-0060", "ReturnMessage"=>"Retrive Recurring Charges Information completed successfully.", "Condition"=>{"RBCID"=>"2010120514303113630"}, "Charge"=>{"RBCID"=>"2010120514303113630", "StoreID"=>"teststore", "RBName"=>nil, "AccountID"=>"2010120518769", "SerialNo"=>"1", "Status"=>"A", "Interval"=>"M", "Trigger"=>"15", "ProcessType"=>"A", "InstallmentNo"=>"1", "StartDate"=>"2010.12.25", "EndDate"=>"2011.12.25"}}}>
     end
     
+    # Psigate only allows the changing of certain charge elements
+    # SerialNo (payment method)
+    # Interval
+    # RbTrigger
+    # Starttime
+    # Endtime
     def test_update_charge
+      @test_charge = Charge.new(:accountid => @account.accountid, :interval => "M", :rbtrigger => "15", :starttime => "2010.12.25", :endtime => "2011.12.25", :productid => "123456789", :quantity => "1", :price => "99.00")
+      @test_charge.save
       
+      assert = Charge.update(
+        :rbcid => @test_charge.rbcid,
+        :rbname => "New Name",
+        :serialno => "2",
+        :interval => "A",
+        :RBTrigger => "10",
+        :StartTime => "2010.12.30",
+        :EndTime => "2011.12.30"
+      )
+      
+      # Example of return response
+      # RuntimeError: #<RubyPsigate::Response:0x00000100944098 @xml_response={"Response"=>{"CID"=>"1000001", "Action"=>"UPDATE A CHARGE", "ReturnCode"=>"RRC-0072", "ReturnMessage"=>"Update Recurring Charge Information completed successfully.", "Condition"=>{"RBCID"=>"2010120522260613649"}, "Update"=>{"Interval"=>"A", "SerialNo"=>"2", "RBName"=>"New Name"}}}>
     end
     
     def test_delete_charge

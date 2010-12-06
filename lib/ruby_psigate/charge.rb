@@ -48,6 +48,49 @@ module RubyPsigate
       @charge
     end
     
+    def self.update(options={})
+      rbname = options[:rbname]
+      rbcid = options[:rbcid]
+      serialno = options[:serialno]
+      interval = options[:interval]
+      rbtrigger = options[:rbtrigger]
+      starttime = options[:starttime]
+      endtime = options[:endtime]
+      
+      begin
+        params = {
+          :Request => {
+            :CID => credential.cid,
+            :UserID => credential.userid,
+            :Password => credential.password,
+            :Action => "RBC02",
+            :Condition => { :RBCID => rbcid },
+            :Update => {
+              :RBName => rbname,
+              :SerialNo => serialno,
+              :Interval => interval,
+              :RBTrigger => rbtrigger,
+              :StartTime => starttime,
+              :EndTime => endtime
+            }
+          }
+        }
+        
+        @result = Request.new
+        @result.params = params
+        @result = @result.post
+
+        if @result.returncode = "RRC-0072"
+          result = true
+        else
+          result = false
+        end
+      rescue ConnectionError => e
+        result = false
+      end
+      result
+    end
+    
     def initialize(attributes={})
       attributes.each_pair do |attribute, value|
         if self.respond_to?(attribute)
