@@ -109,10 +109,6 @@ module RubyPsigate
       super
     end
     
-    # def new_record?
-    #   response["Invoice"]["Status"] == "Paid" ? false : true
-    # end
-    
     # Creates (adds) or Updates recurring charges
     def save
       raise ArgumentError, "StoreID is not specified in superclass" if self.class.storeid.nil?
@@ -190,8 +186,8 @@ module RubyPsigate
     private
     
     # Toggles a charge to be active or inactive
-    def self.toggle(rbcid, action)
-      action = case action
+    def self.toggle(rbcid, set_action)
+      action = case set_action
       when :on
         "RBC08"
       when :off
@@ -212,12 +208,19 @@ module RubyPsigate
         @result = Request.new
         @result.params = params
         @result = @result.post
+
+        if set_action==:on && @result.returncode == "RRC-0190"
+          result = true
+        elsif set_action==:off && @result.returncode == "RRC-0090"
+          result = true
+        else
+          result = false
+        end
         
-        raise "#{@result}"
       rescue ConnectionError => e
-        
+        result = false
       end
-      
+      result
     end
     
   end
