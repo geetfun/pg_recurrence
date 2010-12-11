@@ -92,6 +92,28 @@ module RubyPsigate
       result
     end
     
+    # Add/Delete/Enable/Disable payment method returns the serial no (of the payment method) if successful, else false
+    def add_payment_method
+      begin
+        
+      rescue ConnectionError => e
+        result = false
+      end
+      result
+    end
+    
+    def delete_payment_method
+      
+    end
+    
+    def enable_payment_method
+      
+    end
+    
+    def disable_payment_method
+      
+    end
+    
     def self.find(accountid)
       begin
         params = {
@@ -172,6 +194,10 @@ module RubyPsigate
         response = false
       end
       response
+    end
+    
+    def toggle_payment_method(creditcard)
+      
     end
     
   end

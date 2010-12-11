@@ -98,7 +98,16 @@ module RubyPsigate
         :comments => "Some comment"
       }
       assert @account.save
-    end    
+    end
+    
+    def test_add_payment_method
+      @account = @comparison
+      assert @account.add_payment_method(credit_card)
+    end
+    
+    def test_remove_payment_method
+      @account = @comparison
+    end
     
   end
 end
