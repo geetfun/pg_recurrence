@@ -102,7 +102,8 @@ module RubyPsigate
     
     def test_add_payment_method
       @account = @comparison
-      assert @account.add_payment_method(credit_card)
+      @serial_no = @account.add_payment_method(credit_card)
+      assert_not_nil @serial_no
     end
     
     def test_remove_payment_method

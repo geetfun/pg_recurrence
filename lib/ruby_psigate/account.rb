@@ -93,9 +93,34 @@ module RubyPsigate
     end
     
     # Add/Delete/Enable/Disable payment method returns the serial no (of the payment method) if successful, else false
-    def add_payment_method
+    def add_payment_method(credit_card)
       begin
+        # Action
+        action = "AMA11"
+        @request[:Request][:Action] = action
         
+        @request[:Request][:Account] = {
+          :AccountID => accountid,
+          :CardInfo => {}
+        }
+        
+        %w( CardHolder CardNumber CardExpMonth CardExpYear ).each do |c|
+          value = credit_card.send((c.downcase).to_sym)
+          @request[:Request][:Account][:CardInfo][c.to_sym] = value if value
+        end
+        
+        # Creates parameters
+        params = RubyPsigate::Serializer.new(@request, :header => true).to_xml
+        connection = RubyPsigate::Connection.new(self.class.credential.endpoint)
+        response = connection.post(params)
+        response = Response.new(response)
+        self.response = response
+        
+        if response.success? && response.returncode == "RPA-0015"
+          result = response.serialno
+        else
+          result = false
+        end
       rescue ConnectionError => e
         result = false
       end
