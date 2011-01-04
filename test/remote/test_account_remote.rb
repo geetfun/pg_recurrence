@@ -100,6 +100,11 @@ module RubyPsigate
       assert @account.save
     end
     
+    def test_has_method_called_add_payment_method_after_find
+      @account = Account.find(@comparison.accountid)
+      assert @account.respond_to?(:add_payment_method)
+    end
+    
     def test_add_payment_method
       @account = @comparison
       @serial_no = @account.add_payment_method(credit_card)
