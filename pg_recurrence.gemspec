@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{pg_recurrence}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Simon Chiu"]
-  s.date = %q{2010-12-07}
+  s.date = %q{2011-01-03}
   s.description = %q{Unofficial Psigate recurring billing library for Ruby}
   s.email = %q{skhchiu@gmail.com}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/ruby_psigate/credential.rb",
     "lib/ruby_psigate/request.rb",
     "lib/ruby_psigate/response.rb",
+    "pg_recurrence.gemspec",
     "test/helper.rb",
     "test/remote/test_account_remote.rb",
     "test/remote/test_charge_remote.rb",
